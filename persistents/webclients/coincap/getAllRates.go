@@ -19,15 +19,9 @@ func (c coincap) GetAllRates(ctx context.Context) (dao.GetAllRates, error) {
 
 	u = u.JoinPath(RatesCoincapPath)
 
-	httpReq, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		c.log.Error(ctx, GetAllRatesLogMessage).Err(err).Send()
-		return dao.GetAllRates{}, err
-	}
-
 	cl := http.Client{}
 
-	resp, err := cl.Do(httpReq)
+	resp, err := cl.Get(u.String())
 	if err != nil {
 		c.log.Error(ctx, GetAllRatesLogMessage).Err(err).Send()
 		return dao.GetAllRates{}, err

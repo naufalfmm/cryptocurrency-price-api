@@ -39,17 +39,11 @@ func (c coincap) GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapReque
 
 	u.RawQuery = q.Encode()
 
-	httpReq, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
-		return dao.AllAsset{}, err
-	}
-
 	cl := http.Client{}
 
-	resp, err := cl.Do(httpReq)
+	resp, err := cl.Get(u.String())
 	if err != nil {
-		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
+		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Send()
 		return dao.AllAsset{}, err
 	}
 	defer resp.Body.Close()
