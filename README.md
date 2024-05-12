@@ -283,6 +283,7 @@ Endpoint for remove the coin to the user's tracker
 #### Request
 ##### Headers
 1. Authorization: `Bearer <JWT>`
+2. X-Currency: // Example: IDR, USD, CLP
 
 #### Response (200)
 ```json
