@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  cryptocurrency-price-api:
+    image: naufalfmm/cryptocurrency-price-api:latest
+    build:
+      context: .
+      dockerfile: dockerfile/app.dockerfile
+    container_name: "cryptocurrency-price-api"
+    working_dir: /usr/src
+    ports:
+      - ${PORT}:${PORT}
