@@ -50,3 +50,18 @@ func (mr *MockCoincapMockRecorder) GetAllAssets(ctx, req interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllAssets", reflect.TypeOf((*MockCoincap)(nil).GetAllAssets), ctx, req)
 }
+
+// GetAllRates mocks base method.
+func (m *MockCoincap) GetAllRates(ctx context.Context) (dao.GetAllRates, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllRates", ctx)
+	ret0, _ := ret[0].(dao.GetAllRates)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllRates indicates an expected call of GetAllRates.
+func (mr *MockCoincapMockRecorder) GetAllRates(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllRates", reflect.TypeOf((*MockCoincap)(nil).GetAllRates), ctx)
+}

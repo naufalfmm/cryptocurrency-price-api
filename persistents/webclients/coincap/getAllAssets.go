@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/naufalfmm/cryptocurrency-price-api/consts"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dao"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dto"
 )
@@ -17,11 +18,11 @@ func (c coincap) GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapReque
 
 	u, err := url.Parse(c.basePath)
 	if err != nil {
-		c.log.Error(ctx, "get-all-assets").Err(err).Any("req", req).Send()
+		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
 		return dao.AllAsset{}, err
 	}
 
-	u = u.JoinPath("assets")
+	u = u.JoinPath(AssetCoincapPath)
 
 	q := u.Query()
 	if req.Search != "" {
@@ -40,7 +41,7 @@ func (c coincap) GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapReque
 
 	httpReq, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		c.log.Error(ctx, "get-all-assets").Err(err).Any("req", req).Send()
+		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
 		return dao.AllAsset{}, err
 	}
 
@@ -48,14 +49,14 @@ func (c coincap) GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapReque
 
 	resp, err := cl.Do(httpReq)
 	if err != nil {
-		c.log.Error(ctx, "get-all-assets").Err(err).Any("req", req).Send()
+		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
 		return dao.AllAsset{}, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		c.log.Error(ctx, "get-all-assets").Err(err).Any("req", req).Send()
+		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
 		return dao.AllAsset{}, err
 	}
 

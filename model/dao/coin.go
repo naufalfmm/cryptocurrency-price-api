@@ -12,6 +12,8 @@ type Coin struct {
 	UpdatedAt   time.Time `gorm:"not null"`
 	CreatedBy   string    `gorm:"not null"`
 	UpdatedBy   string    `gorm:"not null"`
+
+	LatestPriceCurrency string `gorm:"-"`
 }
 
 func (Coin) TableName() string {

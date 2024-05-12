@@ -8,10 +8,19 @@ import (
 	"github.com/naufalfmm/cryptocurrency-price-api/utils/logger"
 )
 
+const (
+	GetAllAssetLogMessage = "get-all-assets"
+	GetAllRatesLogMessage = "get-all-rates"
+
+	AssetCoincapPath = "assets"
+	RatesCoincapPath = "rates"
+)
+
 //go:generate mockgen -package=coincap -destination=../../../mocks/persistents/webclients/coincap/init.go -source=init.go
 type (
 	Coincap interface {
 		GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapRequest) (dao.AllAsset, error)
+		GetAllRates(ctx context.Context) (dao.GetAllRates, error)
 	}
 
 	coincap struct {

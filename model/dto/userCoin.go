@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/naufalfmm/cryptocurrency-price-api/consts"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dao"
+	"github.com/naufalfmm/cryptocurrency-price-api/utils/helper"
 	"github.com/naufalfmm/cryptocurrency-price-api/utils/validator"
 )
 
@@ -46,7 +47,7 @@ func NewTrackCoinResponse(uc dao.UserCoin) TrackCoinResponse {
 		Code:                uc.Coin.Code,
 		Name:                uc.Coin.Name,
 		LatestPrice:         uc.Coin.LatestPrice,
-		LatestPriceCurrency: consts.UsdCurrency,
+		LatestPriceCurrency: helper.DefaultIfEmpty(uc.Coin.LatestPriceCurrency, consts.UsdCurrency),
 		AddedAt:             uc.CreatedAt,
 		AddedBy:             uc.CreatedBy,
 	}
@@ -66,6 +67,7 @@ type GetAllRequest struct {
 }
 
 type GetAllTrackRequest struct {
+	Currency   string
 	UserSignIn UserSignIn `json:"-"`
 }
 
@@ -73,7 +75,10 @@ func (req *GetAllTrackRequest) FromGinContext(gc *gin.Context) error {
 	userHeader, _ := gc.Get(consts.XUserHeader)
 	userSignIn := userHeader.(UserSignIn)
 
-	req.UserSignIn = userSignIn
+	*req = GetAllTrackRequest{
+		Currency:   gc.Request.Header.Get(consts.XCurrencyHeader),
+		UserSignIn: userSignIn,
+	}
 
 	return nil
 }

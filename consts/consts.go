@@ -1,12 +1,14 @@
 package consts
 
 const (
-	XUserHeader                = "X-User"
-	ContentTypeHeader          = "Content-Type"
-	ApplicationJsonContentType = "application/json"
-	UsdCurrency                = "USD"
-	SystemCreatedBy            = "SYSTEM"
+	XUserHeader     = "X-User"
+	XCurrencyHeader = "X-Currency"
+
+	UsdCurrency     = "USD"
+	SystemCreatedBy = "SYSTEM"
 
 	SyncPriceLogMessage   = "sync-price"
 	UpdatePriceLogMessage = "update-price"
+
+	ReqLogKey = "req"
 )

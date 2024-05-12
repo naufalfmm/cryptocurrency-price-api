@@ -36,6 +36,29 @@ func (u usecases) updatePrice(ctx context.Context, coins []dao.Coin, userSignin 
 	u.o.CommitTransaction(ctx)
 }
 
+func (u usecases) convertCurrency(ctx context.Context, userCoins []dao.UserCoin, toCurrency string) ([]dao.UserCoin, error) {
+	if toCurrency == "" {
+		return userCoins, nil
+	}
+
+	ratesResp, err := u.persistents.Webclients.Coincap.GetAllRates(ctx)
+	if err != nil {
+		return userCoins, nil
+	}
+
+	currRate := ratesResp.Data.GetBySymbol(toCurrency)
+	if currRate.Symbol == "" {
+		return userCoins, nil
+	}
+
+	for i, userCoin := range userCoins {
+		userCoins[i].Coin.LatestPrice = userCoin.Coin.LatestPrice / helper.DefaultConvertFloat64(currRate.RateUSD, 1)
+		userCoins[i].Coin.LatestPriceCurrency = currRate.Symbol
+	}
+
+	return userCoins, nil
+}
+
 func (u usecases) GetAllTrack(ctx context.Context, req dto.GetAllTrackRequest) ([]dao.UserCoin, error) {
 	ucs, err := u.persistents.Repositories.UserCoins.GetAll(ctx, dto.GetAllRequest{
 		UserID: req.UserSignIn.ID,
@@ -45,6 +68,11 @@ func (u usecases) GetAllTrack(ctx context.Context, req dto.GetAllTrackRequest) (
 	}
 
 	if u.conf.CoincapPriceSyncMode {
+		ucs, err := u.convertCurrency(ctx, ucs, req.Currency)
+		if err != nil {
+			return nil, err
+		}
+
 		return ucs, nil
 	}
 
@@ -60,7 +88,7 @@ func (u usecases) GetAllTrack(ctx context.Context, req dto.GetAllTrackRequest) (
 
 	assetResp, err := u.persistents.Webclients.Coincap.GetAllAssets(ctx, ccReq)
 	if err != nil {
-		return nil, err
+		return ucs, nil
 	}
 
 	assetPriceMap := make(map[string]string)
@@ -74,7 +102,7 @@ func (u usecases) GetAllTrack(ctx context.Context, req dto.GetAllTrackRequest) (
 			continue
 		}
 
-		ucs[i].Coin.LatestPrice = helper.DefaultConvertFloat64(assetPriceMap[uc.Coin.CoincapID])
+		ucs[i].Coin.LatestPrice = helper.DefaultConvertFloat64(assetPriceMap[uc.Coin.CoincapID], 0)
 		updatedCoins[i] = dao.Coin{
 			CoincapID:   ucs[i].Coin.CoincapID,
 			LatestPrice: ucs[i].Coin.LatestPrice,
@@ -84,6 +112,11 @@ func (u usecases) GetAllTrack(ctx context.Context, req dto.GetAllTrackRequest) (
 	}
 
 	go u.updatePrice(context.Background(), updatedCoins, req.UserSignIn)
+
+	ucs, err = u.convertCurrency(ctx, ucs, req.Currency)
+	if err != nil {
+		return nil, err
+	}
 
 	return ucs, nil
 }

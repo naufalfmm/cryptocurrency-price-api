@@ -13,7 +13,7 @@ import (
 func (u usecases) SyncPrice(ctx context.Context, req dto.SyncCoinPriceRequest) {
 	coins, err := u.persistents.Repositories.Coins.GetByCoincapIDs(ctx, req.ToCoincapIDs())
 	if err != nil {
-		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any("req", req)
+		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any(consts.ReqLogKey, req)
 	}
 
 	updatedCoins := make([]dao.Coin, len(req.CoinPriceMap))
@@ -26,24 +26,24 @@ func (u usecases) SyncPrice(ctx context.Context, req dto.SyncCoinPriceRequest) {
 
 		updatedCoins[i] = dao.Coin{
 			CoincapID:   coin.CoincapID,
-			LatestPrice: helper.DefaultConvertFloat64(coinPrice),
+			LatestPrice: helper.DefaultConvertFloat64(coinPrice, 0),
 			UpdatedAt:   frozenTime.Now(ctx),
 			UpdatedBy:   consts.SystemCreatedBy,
 		}
 
 		coinHistories[i] = dao.CoinHistory{
 			CoinID:      coin.ID,
-			LatestPrice: helper.DefaultConvertFloat64(coinPrice),
+			LatestPrice: helper.DefaultConvertFloat64(coinPrice, 0),
 			CreatedAt:   frozenTime.Now(ctx),
 			CreatedBy:   consts.SystemCreatedBy,
 		}
 	}
 
 	if err := u.persistents.Repositories.Coins.UpdatePrices(ctx, updatedCoins); err != nil {
-		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any("req", req)
+		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any(consts.ReqLogKey, req)
 	}
 
 	if _, err := u.persistents.Repositories.CoinHistories.BulkCreate(ctx, coinHistories); err != nil {
-		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any("req", req)
+		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any(consts.ReqLogKey, req)
 	}
 }

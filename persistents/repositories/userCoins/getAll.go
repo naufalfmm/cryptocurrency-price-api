@@ -3,6 +3,7 @@ package userCoins
 import (
 	"context"
 
+	"github.com/naufalfmm/cryptocurrency-price-api/consts"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dao"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dto"
 	"github.com/naufalfmm/cryptocurrency-price-api/utils/orm/driver/sqliteOrm"
@@ -21,7 +22,7 @@ func (r repositories) GetAll(ctx context.Context, req dto.GetAllRequest, queryMo
 	}
 
 	if err := o.Find(&data).Error(); err != nil {
-		r.log.Error(ctx, "get-all-user-coins").Err(err).Any("req", req).Send()
+		r.log.Error(ctx, "get-all-user-coins").Err(err).Any(consts.ReqLogKey, req).Send()
 		return nil, err
 	}
 

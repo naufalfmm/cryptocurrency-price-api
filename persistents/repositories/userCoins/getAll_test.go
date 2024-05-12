@@ -3,6 +3,7 @@ package userCoins
 import (
 	"testing"
 
+	"github.com/naufalfmm/cryptocurrency-price-api/consts"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dao"
 	"github.com/naufalfmm/cryptocurrency-price-api/model/dto"
 	"github.com/naufalfmm/cryptocurrency-price-api/utils/orm"
@@ -61,7 +62,7 @@ func Test_repositories_GetAll(t *testing.T) {
 
 		mock.log.EXPECT().Error(mock.ctx, "get-all-user-coins").Return(mock.log)
 		mock.log.EXPECT().Err(errAny).Return(mock.log)
-		mock.log.EXPECT().Any("req", req).Return(mock.log)
+		mock.log.EXPECT().Any(consts.ReqLogKey, req).Return(mock.log)
 		mock.log.EXPECT().Send()
 
 		res, err := mock.repositories.GetAll(mock.ctx, req, queryModifier)
