@@ -2,7 +2,7 @@ package coincap
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -28,7 +28,7 @@ func (c coincap) GetAllRates(ctx context.Context) (dao.GetAllRates, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		c.log.Error(ctx, GetAllRatesLogMessage).Err(err).Send()
 		return dao.GetAllRates{}, err

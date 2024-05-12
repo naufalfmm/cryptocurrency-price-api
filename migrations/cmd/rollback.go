@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -57,7 +56,7 @@ func rollbackVersion(ctx context.Context, o orm.Orm) (model.MigrationLog, error)
 	}
 
 	filePath := fmt.Sprintf("%s%s%s_%s_rollback.sql", wd, sqlLocation, log.ID, log.Name)
-	content, err := ioutil.ReadFile(filePath)
+	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return model.MigrationLog{}, err
 	}

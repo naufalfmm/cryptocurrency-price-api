@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -67,7 +66,7 @@ func migrate(o orm.Orm) cli.ActionFunc {
 				return nil
 			}
 
-			content, err := ioutil.ReadFile(p)
+			content, err := os.ReadFile(p)
 			if err != nil {
 				return err
 			}

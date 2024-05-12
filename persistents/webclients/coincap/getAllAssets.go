@@ -2,7 +2,7 @@ package coincap
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -48,7 +48,7 @@ func (c coincap) GetAllAssets(ctx context.Context, req dto.AllAssetsCoincapReque
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		c.log.Error(ctx, GetAllAssetLogMessage).Err(err).Any(consts.ReqLogKey, req).Send()
 		return dao.AllAsset{}, err
