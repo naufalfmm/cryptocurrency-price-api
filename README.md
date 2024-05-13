@@ -40,7 +40,7 @@ Service for track the latest price of cryptocurrency asset
         ```
 2. Migrate the database by
     ```sh
-    go run ./migration/main.go migrate
+    go run ./migrations/main.go migrate
     ```
 4. Run the service by
     ```sh
