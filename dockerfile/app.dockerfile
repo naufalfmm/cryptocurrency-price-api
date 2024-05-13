@@ -4,9 +4,9 @@ WORKDIR /go/src/github.com/naufalfmm/cryptocurrency-price-api
 COPY go.mod go.sum ./
 RUN GO111MODULE=on go mod download
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o naufalfmm/cryptocurrency-currency-api
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o naufalfmm/cryptocurrency-price-api
 
 FROM alpine:edge
 WORKDIR /usr/src
 COPY --from=build /go/src/github.com/naufalfmm/cryptocurrency-price-api .
-CMD ["./naufalfmm/cryptocurrency-currency-api"]
+CMD ["./naufalfmm/cryptocurrency-price-api"]
