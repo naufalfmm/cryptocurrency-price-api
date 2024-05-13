@@ -5,7 +5,7 @@ services:
     image: naufalfmm/cryptocurrency-price-api:latest
     build:
       context: .
-      dockerfile: dockerfile/app.dockerfile
+      dockerfile: dockerfile/Dockerfile.app
     container_name: "cryptocurrency-price-api"
     working_dir: /usr/src
     ports:
