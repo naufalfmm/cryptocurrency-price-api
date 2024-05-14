@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/naufalfmm/cryptocurrency-price-api/migrations/model"
 	"github.com/naufalfmm/cryptocurrency-price-api/utils/orm"
@@ -44,7 +45,7 @@ func rollbackVersion(ctx context.Context, o orm.Orm) (model.MigrationLog, error)
 		return model.MigrationLog{}, err
 	}
 
-	filePath := fmt.Sprintf("%s%s_%s_rollback.sql", getSQLPath(), log.ID, log.Name)
+	filePath := path.Join(getSQLPath(), fmt.Sprintf("%s_%s_rollback.sql", log.ID, log.Name))
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return model.MigrationLog{}, err
