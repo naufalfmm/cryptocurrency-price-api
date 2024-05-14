@@ -29,6 +29,8 @@ func NewConfig() (*EnvConfig, error) {
 		if err := envconfig.Process("", &config); err != nil {
 			return nil, errors.Wrap(err, "failed to read from env variable")
 		}
+
+		return &config, nil
 	}
 
 	if err := godotenv.Load(filename); err != nil {

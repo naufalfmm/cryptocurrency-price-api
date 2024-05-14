@@ -1,4 +1,4 @@
-FROM alpine:edge AS build
+FROM alpine:latest AS build
 
 RUN apk add --no-cache --update go gcc g++
 
@@ -11,7 +11,7 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o cryptocurrency-price-api
 
 
-FROM alpine:edge
+FROM alpine:latest
 
 RUN apk update && apk add --no-cache tzdata
 RUN apk --no-cache add ca-certificates
