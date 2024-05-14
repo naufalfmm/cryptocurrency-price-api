@@ -14,23 +14,7 @@ func create() cli.ActionFunc {
 	return func(ctx *cli.Context) error {
 		unixMilli := time.Now().UnixMilli()
 
-		wd, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-
-		sqlLocation := path.Join("sql")
-		if !strings.Contains(wd, "migrations") {
-			sqlLocation = path.Join("migrations", sqlLocation)
-		}
-
-		sqlLocation = path.Join(wd, sqlLocation)
-
-		if _, err := os.Stat(sqlLocation); os.IsNotExist(err) {
-			if err := os.Mkdir(sqlLocation, 0755); err != nil {
-				return err
-			}
-		}
+		sqlLocation := getSQLPath()
 
 		name := strings.ToLower(ctx.String("name"))
 		name = strings.ReplaceAll(name, " ", "_")

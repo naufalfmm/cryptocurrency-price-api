@@ -31,17 +31,7 @@ func migrate(o orm.Orm) cli.ActionFunc {
 		o.Begin()
 		defer o.Rollback()
 
-		wd, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-
-		sqlLocation := "/sql/"
-		if !strings.Contains(wd, "migrations") {
-			sqlLocation = "/migrations/sql/"
-		}
-
-		err = filepath.Walk(wd+sqlLocation, func(p string, info fs.FileInfo, err error) error {
+		err := filepath.Walk(getSQLPath(), func(p string, info fs.FileInfo, err error) error {
 			_, file := filepath.Split(p)
 			if file == "" {
 				return nil
