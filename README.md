@@ -53,9 +53,10 @@ Service for track the latest price of cryptocurrency asset
 
 4. Run the service by
     ```sh
-    make app
+    make app DOCKER= PORT= DBPATH= DBFILENAME= ENVFILENAME=
 
     # Note:
+    # DOCKER= // If the migrating process use docker, please set as true.
     # PORT= // Port the service is running. Please set is as stated in the .env file.
     # DBPATH= // Set the value if the DOCKER parameter is true
     # DBFILENAME= // Set the value if the DOCKER parameter is true
@@ -64,9 +65,66 @@ Service for track the latest price of cryptocurrency asset
     Note:
     The command `make app` automatically create the docker image (`make app_init`) and run the migration (`make app_run`) if the `DOCKER` parameter is `true`
 
+## Testing
+
 If you want to test the code, run
 ```sh
 go test ./... -count=1 -failfast
+```
+
+## Make Command
+
+### Initialize migration
+The command create the docker image of migration `naufalfmm/cryptocurrency-price-api-migration`
+
+```sh
+make db_init DOCKER=
+
+# Note
+# DOCKER= // If the parameter is `true`, it will build the docker image
+```
+
+### Create SQL file
+The command create the sql file
+
+```sh
+make db_create DOCKER= SQLPATH= DBPATH= DBFILENAME= ENVFILENAME=
+
+# Note:
+# DOCKER= // If the file migration creation use docker, please set as true.
+# SQLPATH= // Set the value if the DOCKER parameter is true
+# DBPATH= // Set the value if the DOCKER parameter is true
+# DBFILENAME= // Set the value if the DOCKER parameter is true
+# ENVFILENAME= // Set the value if the DOCKER parameter is true
+```
+
+### Migrate SQL files
+The command migrates all sql files in `./migrates/sql` or `./sql`
+
+```sh
+make db_migrate DOCKER= SQLPATH= DBPATH= DBFILENAME= ENVFILENAME=
+
+# Note:
+# DOCKER= // If the migrating process use docker, please set as true.
+# SQLPATH= // Set the value if the DOCKER parameter is true
+# DBPATH= // Set the value if the DOCKER parameter is true
+# DBFILENAME= // Set the value if the DOCKER parameter is true
+# ENVFILENAME= // Set the value if the DOCKER parameter is true
+```
+
+### Rollback SQL files
+The command rollbacks all sql files in `./migrates/sql` or `./sql`
+
+```sh
+make db_migrate DOCKER= SQLPATH= DBPATH= DBFILENAME= ENVFILENAME= VERSION=
+
+# Note:
+# DOCKER= // If the migrating process use docker, please set as true.
+# SQLPATH= // Set the value if the DOCKER parameter is true
+# DBPATH= // Set the value if the DOCKER parameter is true
+# DBFILENAME= // Set the value if the DOCKER parameter is true
+# ENVFILENAME= // Set the value if the DOCKER parameter is true
+# VERSION= // The value is optional. If the VERSION parameter set, the sql files will be rollback-ed until the VERSION value
 ```
 
 ## API Docs
