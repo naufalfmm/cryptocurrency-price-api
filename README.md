@@ -9,43 +9,61 @@ Service for track the latest price of cryptocurrency asset
 2. Golang >=1.19
 
 ## How To Run
-1. Create env file
-    - Create the env file and fill the value below
-        ```sh
-        NAME="Cryptocurrency Price API" # The service name
-        PORT=PORT # The service port. The default is 8080
+1. Create `.env` file
+    ```sh
+    NAME="Cryptocurrency Price API" # The service name
+    PORT=PORT # The service port. The default is 8080
 
-        DB_PATH=DB_PATH # The location of Sqlite database
+    DB_PATH=DB_PATH # The location of Sqlite database
 
-        DB_MAX_IDLE_CONNECTION=DB_MAX_IDLE_CONNECTION # The max idle connection of the db. The default is 10
-        DB_MAX_OPEN_CONNECTION=DB_MAX_OPEN_CONNECTION # The max open connection of the db. The default is 10
-        DB_CONNECTION_MAX_LIFE_TIME=DB_CONNECTION_MAX_LIFE_TIME # The connection maximum lifetime. The default is 60s
+    DB_MAX_IDLE_CONNECTION=DB_MAX_IDLE_CONNECTION # The max idle connection of the db. The default is 10
+    DB_MAX_OPEN_CONNECTION=DB_MAX_OPEN_CONNECTION # The max open connection of the db. The default is 10
+    DB_CONNECTION_MAX_LIFE_TIME=DB_CONNECTION_MAX_LIFE_TIME # The connection maximum lifetime. The default is 60s
 
-        DB_LOG_MODE=DB_LOG_MODE # Log mode of the DB. If true, the query is printed. The default is false
-        DB_LOG_SLOW_THRESHOLD=DB_LOG_SLOW_THRESHOLD # Threshold of the query printed as slow. The default is 1s
+    DB_LOG_MODE=DB_LOG_MODE # Log mode of the DB. If true, the query is printed. The default is false
+    DB_LOG_SLOW_THRESHOLD=DB_LOG_SLOW_THRESHOLD # Threshold of the query printed as slow. The default is 1s
 
-        DB_RETRY=DB_RETRY # The number of connection retrying. The default is 3
-        DB_WAIT_SLEEP=DB_WAIT_SLEEP # The sleep time between retry. The default is 1s
+    DB_RETRY=DB_RETRY # The number of connection retrying. The default is 3
+    DB_WAIT_SLEEP=DB_WAIT_SLEEP # The sleep time between retry. The default is 1s
 
-        LOG_MODE=LOG_MODE # The log mode. If true, log is printed
+    LOG_MODE=LOG_MODE # The log mode. If true, log is printed
 
-        BCRYPT_COST=BCRYPT_COST # The password bcrypt cost. The default is 5
+    BCRYPT_COST=BCRYPT_COST # The password bcrypt cost. The default is 5
 
-        JWT_PUBLIC_KEY=JWT_PUBLIC_KEY
-        JWT_ALG=JWT_ALG # The default is HS256
-        JWT_EXPIRES=JWT_EXPIRES # The default is 1h
+    JWT_PUBLIC_KEY=JWT_PUBLIC_KEY
+    JWT_ALG=JWT_ALG # The default is HS256
+    JWT_EXPIRES=JWT_EXPIRES # The default is 1h
 
-        COINCAP_BASE_PATH=COINCAP_BASE_PATH # The base path of coincap API
-        COINCAP_PRICE_SYNC_MODE=COINCAP_PRICE_SYNC_MODE # The mode of asset price sync via websocket. The default is false
-        ```
+    COINCAP_BASE_PATH=COINCAP_BASE_PATH # The base path of coincap API
+    COINCAP_PRICE_SYNC_MODE=COINCAP_PRICE_SYNC_MODE # The mode of asset price sync via websocket. The default is false
+    ```
 2. Migrate the database by
     ```sh
-    go run ./migrations/main.go migrate
+    make db DOCKER= SQLPATH= DBPATH= DBFILENAME= ENVFILENAME=
+
+    # Note:
+    # DOCKER= // If the migrating process use docker, please set as true.
+    # SQLPATH= // Set the value if the DOCKER parameter is true
+    # DBPATH= // Set the value if the DOCKER parameter is true
+    # DBFILENAME= // Set the value if the DOCKER parameter is true
+    # ENVFILENAME= // Set the value if the DOCKER parameter is true
     ```
+    Note:
+    The command `make db` automatically create the docker image (`make db_init`) and run the migration (`make db_migrate`) if the `DOCKER` parameter is `true`
+
 4. Run the service by
     ```sh
-    go run main.go
+    make app
+
+    # Note:
+    # PORT= // Port the service is running. Please set is as stated in the .env file.
+    # DBPATH= // Set the value if the DOCKER parameter is true
+    # DBFILENAME= // Set the value if the DOCKER parameter is true
+    # ENVFILENAME= // Set the value if the DOCKER parameter is true
     ```
+    Note:
+    The command `make app` automatically create the docker image (`make app_init`) and run the migration (`make app_run`) if the `DOCKER` parameter is `true`
+
 If you want to test the code, run
 ```sh
 go test ./... -count=1 -failfast
