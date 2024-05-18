@@ -34,6 +34,7 @@ type EnvConfig struct {
 	JwtExpires   time.Duration `envconfig:"JWT_EXPIRES" required:"true" default:"1h"`
 
 	CoincapBasePath      string `envconfig:"COINCAP_BASE_PATH" required:"true"`
+	CoincapWebsocketPath string `envconfig:"COINCAP_WEBSOCKET_PATH" required:"true"`
 	CoincapPriceSyncMode bool   `envconfig:"COINCAP_PRICE_SYNC_MODE" default:"false" required:"true"`
 }
 

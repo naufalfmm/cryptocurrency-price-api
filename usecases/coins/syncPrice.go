@@ -16,8 +16,8 @@ func (u usecases) SyncPrice(ctx context.Context, req dto.SyncCoinPriceRequest) {
 		u.log.Error(ctx, consts.SyncPriceLogMessage).Err(err).Any(consts.ReqLogKey, req)
 	}
 
-	updatedCoins := make([]dao.Coin, len(req.CoinPriceMap))
-	coinHistories := make([]dao.CoinHistory, len(req.CoinPriceMap))
+	updatedCoins := make([]dao.Coin, len(coins))
+	coinHistories := make([]dao.CoinHistory, len(coins))
 	for i, coin := range coins {
 		coinPrice, ok := req.CoinPriceMap[coin.CoincapID]
 		if !ok {

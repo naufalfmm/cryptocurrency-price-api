@@ -1,6 +1,8 @@
 package dialers
 
 import (
+	"fmt"
+
 	"github.com/naufalfmm/cryptocurrency-price-api/infrastructures/wslistener/listeners"
 	"github.com/naufalfmm/cryptocurrency-price-api/resources/config"
 	"github.com/naufalfmm/cryptocurrency-price-api/usecases"
@@ -25,6 +27,6 @@ func Init(u usecases.Usecases, log logger.Logger) (Dialers, error) {
 
 func (d Dialers) Register(we *ws.Engine, conf *config.EnvConfig) {
 	if conf.CoincapPriceSyncMode {
-		we.Dial("wss://ws.coincap.io/prices?assets=ALL", d.Listeners.Coins.SyncPrice)
+		we.Dial(fmt.Sprintf("%sprices?assets=ALL", conf.CoincapWebsocketPath), d.Listeners.Coins.SyncPrice)
 	}
 }
