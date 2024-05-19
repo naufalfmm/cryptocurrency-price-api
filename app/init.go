@@ -107,7 +107,6 @@ func Init() App {
 }
 
 func (app App) Run() {
-	app.ge.Use(app.middlewares.PanicRecover(), app.middlewares.ImplementCors())
 	binding.Validator = app.validator
 
 	httpServer := http.Server{

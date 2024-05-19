@@ -26,6 +26,7 @@ func Init(usec usecases.Usecases, middl middlewares.Middlewares) (Routes, error)
 
 func (r Routes) Register(ge *gin.Engine) {
 	ge.RedirectFixedPath = true
+	ge.Use(r.Middlewares.PanicRecover(), r.Middlewares.ImplementCors())
 
 	auth := ge.Group("/auth")
 	auth.POST("/signin", r.Controllers.Auth.SignIn)
