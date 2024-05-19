@@ -50,7 +50,7 @@ func (m middlewares) PanicRecover() gin.HandlerFunc {
 				}
 			}
 
-			gc.JSON(http.StatusInternalServerError, dto.Default{
+			gc.AbortWithStatusJSON(http.StatusInternalServerError, dto.Default{
 				Ok:      false,
 				Message: err.Error(),
 				Data:    err,
